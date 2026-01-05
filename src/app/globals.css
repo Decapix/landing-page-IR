@@ -1,0 +1,75 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --foreground-rgb: 0, 0, 0;
+  --background-start-rgb: 214, 219, 220;
+  --background-end-rgb: 255, 255, 255;
+  --font-urbanist: "Urbanist";
+  --font-blisstwin: "BlissTwin";
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --foreground-rgb: 255, 255, 255;
+    --background-start-rgb: 0, 0, 0;
+    --background-end-rgb: 0, 0, 0;
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  font-family: var(--font-urbanist);
+  background: white;
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+}
+ 
+
+@font-face {
+  font-family: "BlissTwin";
+  src: url("/fonts/Blisstwin/Blisstwin.woff2") format("woff2"),
+       url("/fonts/Blisstwin/Blisstwin.otf") format("otf");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "BlissTwin";
+  src: url("/fonts/Blisstwin/Blisstwin.woff2") format("woff2"),
+       url("/fonts/Blisstwin/Blisstwin.otf") format("otf");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+
+@font-face {
+  font-family: "Urbanist";
+  src: url("/fonts/Urbanist/Urbanist.ttf") format("ttf");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Urbanist";
+  src: url("/fonts/Urbanist/Urbanist-ExtraLight.ttf") format("ttf");
+  font-weight: 200;
+  font-style: normal;
+  font-display: swap;
+}
