@@ -1,0 +1,22 @@
+# Node & build
+node_modules
+.pnpm-store
+.next
+
+# VCS
+.git
+.gitignore
+
+# Editor/OS
+.vscode
+.DS_Store
+
+# Local env
+.env
+.env.local
+
+# Misc
+dist
+coverage
+npm-debug.log
+pnpm-debug.log

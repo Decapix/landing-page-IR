@@ -38,8 +38,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="scroll-smooth">
-      <head>
-        {GA_TRACKING_ID && (
+    
+      <body className={urbanist.variable}>
+         {GA_TRACKING_ID && (
           <>
             <Script
               src={`https://www.googletagmanager.com/gtag/js?id=${GA_TRACKING_ID}`}
@@ -57,8 +58,6 @@ export default function RootLayout({
             </Script>
           </>
         )}
-      </head>
-      <body className={urbanist.variable}>
         <LanguageProvider>
           <Analytics />
           {children}
