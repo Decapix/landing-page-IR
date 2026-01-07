@@ -3,7 +3,7 @@ import { ApiCore } from "@/config/api-core";
 import { LandingRegisterRequestDTO, LandingRegisterResponseDTO } from "./dto/landing.dto";
 
 export const LandingRegister = async (payload: LandingRegisterRequestDTO): Promise<LandingRegisterResponseDTO> => {
-    const { lastName, firstName, email, position, socialMedia, language } = payload;
+    const { lastName, firstName, email, position, socialMedia, language, message, company } = payload;
     return await ApiCore(LandingRoutes.register, {
         method: "POST",
         body: JSON.stringify({
@@ -12,7 +12,9 @@ export const LandingRegister = async (payload: LandingRegisterRequestDTO): Promi
             email: email,
             position: position,
             socialMedia: socialMedia,
-            language: language
+            language: language,
+            message: message || undefined,
+            company: company || undefined,
         })
     });
 }

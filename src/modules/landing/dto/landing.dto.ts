@@ -5,6 +5,9 @@ export type LandingRegisterRequestDTO = {
     position: string;
     socialMedia: string;
     language: string;
+    // Optional fields for contact usage
+    message?: string;
+    company?: string; // honeypot (must be empty)
 }
 
 export type LandingRegisterResponseDTO = {

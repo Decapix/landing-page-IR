@@ -19,6 +19,8 @@ export default function ContactSection() {
     socialMedia: "",
     position: "",
     otherPosition: "",
+    message: "",
+    company: "", // honeypot field, must remain empty
     language: language
   });
 
@@ -56,21 +58,49 @@ export default function ContactSection() {
 
     if (!formData.lastName || !formData.firstName || !formData.email) {
       setIsSubmitted(false)
+      setIsError(true)
+      setIsErrorMessage(language === 'fr' ? 'Veuillez remplir tous les champs requis.' : 'Please fill out required fields.')
+      setIsLoading(false)
+      return
+    }
+
+    // Honeypot anti-spam: must be empty
+    if (formData.company && formData.company.trim() !== '') {
+      // ignore silently to avoid providing feedback to bots
+      setIsSubmitted(false)
+      setIsLoading(false)
       return
     }
 
     if (!formData.position) {
       setIsSubmitted(false)
+      setIsError(true)
+      setIsErrorMessage(language === 'fr' ? 'Veuillez indiquer votre position.' : 'Please indicate your position.')
+      setIsLoading(false)
       return
     }
 
     if (formData.position === "other" && !formData.otherPosition) {
       setIsSubmitted(false)
+      setIsError(true)
+      setIsErrorMessage(language === 'fr' ? 'Veuillez préciser votre position.' : 'Please specify your position.')
+      setIsLoading(false)
       return
     }
 
-    if (!formData.email.includes("@")) {
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(formData.email)) {
       setIsSubmitted(false)
+      setIsError(true)
+      setIsErrorMessage(language === 'fr' ? "Email invalide." : "Invalid email.")
+      setIsLoading(false)
+      return
+    }
+
+    if (!formData.message || formData.message.trim().length < 10) {
+      setIsSubmitted(false)
+      setIsError(true)
+      setIsErrorMessage(language === 'fr' ? 'Veuillez saisir un message (au moins 10 caractères).' : 'Please enter a message (at least 10 characters).')
+      setIsLoading(false)
       return
     }
 
@@ -82,13 +112,17 @@ export default function ContactSection() {
       email: formData.email,
       socialMedia: formData.socialMedia,
       position: formData.position === "other" ? formData.otherPosition : formData.position,
-      language: language
+      language: language,
+      message: formData.message,
+      company: formData.company,
     }
 
     try {
       const response = await LandingRegister(payload)
       if (response.success) {
         setIsSubmitted(true)
+        setIsError(false)
+        setIsErrorMessage("")
         setFormData({
           lastName: "",
           firstName: "",
@@ -96,6 +130,8 @@ export default function ContactSection() {
           socialMedia: "",
           position: "",
           otherPosition: "",
+          message: "",
+          company: "",
           language: language
         })
       } else {
@@ -105,6 +141,8 @@ export default function ContactSection() {
     } catch (error) {
       setIsError(true)
       setIsErrorMessage(error instanceof Error ? error.message : 'An unknown error occurred')
+    } finally {
+      setIsLoading(false)
     }
   }
 
@@ -213,10 +251,32 @@ export default function ContactSection() {
               onChange={(e) => setFormData({ ...formData, socialMedia: e.target.value })}
             />
 
+            {/* Message */}
+            <textarea
+              placeholder={language === "fr" ? "Votre message *" : "Your message *"}
+              className="w-full px-4 py-3 rounded-[0.5rem] bg-white text-[#4b5563] min-h-[120px]"
+              value={formData.message}
+              onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+            />
+
+            {/* Honeypot anti-spam - should remain empty; hidden from real users */}
+            <input
+              type="text"
+              name="company"
+              tabIndex={-1}
+              autoComplete="off"
+              value={formData.company}
+              onChange={(e) => setFormData({ ...formData, company: e.target.value })}
+              style={{ display: 'none' }}
+              aria-hidden="true"
+            />
+
             <motion.button
               type="button"
               onClick={handleSubmit}
-              className="w-full bg-black text-white py-3 rounded-[0.5rem] hover:bg-gray-800 transition-colors relative overflow-hidden"
+              disabled={isLoading || isSubmitted}
+              aria-busy={isLoading}
+              className={`w-full py-3 rounded-[0.5rem] relative overflow-hidden ${isLoading || isSubmitted ? 'bg-gray-600 text-white' : 'bg-black text-white hover:bg-gray-800'}`}
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
             >
@@ -240,7 +300,7 @@ export default function ContactSection() {
               >
                 <CheckCircle className="h-6 w-6 text-white mr-4" /> {language === "fr" ? "Informations envoyées" : "Information sent"}
               </motion.div>
-              {/* <motion.div
+              <motion.div
                 className="absolute inset-0 flex items-center justify-center"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: isLoading ? 1 : 0 }}
@@ -250,7 +310,7 @@ export default function ContactSection() {
                   animate={{ rotate: 360 }}
                   transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
                 />
-              </motion.div> */}
+              </motion.div>
             </motion.button>
           </div>
         </motion.div>

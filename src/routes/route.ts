@@ -2,7 +2,7 @@
  * Landing Routes
  */
 export const LandingRoutes = {
-    register: '/landing/register'
+    register: '/api/contact'
 }
 
 /**
