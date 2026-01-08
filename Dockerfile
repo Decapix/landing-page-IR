@@ -1,7 +1,15 @@
 # Production-ready multi-stage Dockerfile for Next.js with pnpm
+# Supports multi-platform builds (amd64/arm64)
+# Build with: docker buildx build --platform linux/amd64,linux/arm64 -t your-image:tag .
 
-FROM node:20-alpine AS builder
+FROM --platform=$BUILDPLATFORM node:20-alpine AS builder
 WORKDIR /app
+
+# Build arguments for cross-compilation
+ARG TARGETPLATFORM
+ARG BUILDPLATFORM
+ARG TARGETOS
+ARG TARGETARCH
 
 # Install basic build tools
 RUN apk add --no-cache libc6-compat python3 make g++ git
@@ -20,23 +28,27 @@ COPY . .
 RUN pnpm build
 
 # Runner stage (smaller image)
-FROM node:20-alpine AS runner
+FROM --platform=$TARGETPLATFORM node:20-alpine AS runner
 WORKDIR /app
 ENV NODE_ENV=production
 
-# Ensure pnpm is available in the runtime image
-RUN corepack enable && corepack prepare pnpm@latest --activate
+# Create a non-root user
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 nextjs
 
 # Copy necessary artifacts from the builder
-COPY --from=builder /app/package.json ./package.json
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/.next ./.next
-COPY --from=builder /app/public ./public
-COPY --from=builder /app/next.config.mjs ./next.config.mjs
+# The standalone output includes a minimal server.js and all required dependencies
+COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+COPY --from=builder --chown=nextjs:nodejs /app/public ./public
+
+# Switch to non-root user
+USER nextjs
 
 # Expose port and default env
 ENV PORT=3000
+ENV HOSTNAME="0.0.0.0"
 EXPOSE 3000
 
-# Start the Next.js server
-CMD ["pnpm", "start"]
+# Start the Next.js server in standalone mode
+CMD ["node", "server.js"]
