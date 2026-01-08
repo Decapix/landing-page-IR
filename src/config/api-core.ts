@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-const BASE_URL = process.env.NEXT_PUBLIC_BACKEND_URL || "https://api.inside-runway.com";
+const BASE_URL = process.env.NEXT_PUBLIC_BACKEND_URL || "";
 
 export async function ApiCore (url: string, options: RequestInit = {}) {
     try {
