@@ -3,7 +3,8 @@
 import { useState, useEffect } from "react"
 import { useLanguage } from "./language-provider"
 import LanguageSwitcher from "./language-switcher"
-import { ArrowDown } from "lucide-react"
+import { ArrowDown, ArrowRight } from "lucide-react"
+import Link from "next/link"
 import Image from "next/image"
 // import { useMobile } from "../hooks/use-mobile"
 
@@ -75,7 +76,14 @@ export default function Header() {
 
           <div className="flex items-center gap-4">
 
-            {/* CTA Button */}
+            {/* CTA Buttons */}
+            <Link
+              href="/book-demo"
+              className="hidden md:flex items-center bg-white text-black border border-black px-4 py-2 rounded-[0.5rem] hover:bg-gray-100 transition-colors text-sm"
+            >
+              {language === "fr" ? "Réserver une démo" : "Book a demo"}
+              <ArrowRight className="ml-2 h-4 w-4" />
+            </Link>
             <button
               onClick={() => scrollToSection("contact")}
               className="hidden md:flex items-center bg-black text-white px-4 py-2 rounded-[0.5rem] hover:bg-gray-800 transition-colors text-sm"
@@ -152,9 +160,17 @@ export default function Header() {
               <LanguageSwitcher />
             </div>
 
+            <Link
+              href="/book-demo"
+              className="flex items-center bg-white text-black border border-black px-4 py-2 rounded-[0.5rem] w-full justify-center mt-4"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              {language === "fr" ? "Réserver une démo" : "Book a demo"}
+              <ArrowRight className="ml-2 h-4 w-4" />
+            </Link>
             <button
               onClick={() => scrollToSection("contact")}
-              className="flex items-center bg-black text-white px-4 py-2 rounded-[0.5rem] w-full justify-center mt-4"
+              className="flex items-center bg-black text-white px-4 py-2 rounded-[0.5rem] w-full justify-center mt-2"
             >
               {language === "fr" ? "Prenez part à la révolution" : "Join the revolution"}
               <ArrowDown className="ml-2 h-4 w-4" />
