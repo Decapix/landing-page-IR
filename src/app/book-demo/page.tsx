@@ -111,7 +111,7 @@ export default function BookDemoPage() {
     setIsError(false)
 
     try {
-      const response = await fetch("/api/book-demo", {
+      const response = await fetch("https://insiderunwaysignupcurjxhhh-signup-request.functions.fnc.fr-par.scw.cloud", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
