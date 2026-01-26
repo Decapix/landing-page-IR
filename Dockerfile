@@ -1,4 +1,4 @@
-# Production-ready multi-stage Dockerfile for Next.js with pnpm
+# Production-ready multi-stage Dockerfile for Next.js
 # Supports multi-platform builds (amd64/arm64)
 # Build with: docker buildx build --platform linux/amd64,linux/arm64 -t your-image:tag .
 
@@ -14,18 +14,15 @@ ARG TARGETARCH
 # Install basic build tools
 RUN apk add --no-cache libc6-compat python3 make g++ git
 
-# Enable corepack so pnpm is available
-RUN corepack enable && corepack prepare pnpm@latest --activate
-
 # Copy lockfile & package manifest first for better caching
-COPY package.json pnpm-lock.yaml ./
+COPY package.json package-lock.json ./
 
 # Install dependencies (including dev deps for the build)
-RUN pnpm install --frozen-lockfile
+RUN npm ci
 
 # Copy rest of the sources and build
 COPY . .
-RUN pnpm build
+RUN npm run build
 
 # Runner stage (smaller image)
 FROM --platform=$TARGETPLATFORM node:20-alpine AS runner
