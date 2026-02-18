@@ -13,7 +13,6 @@ const config: Config = {
 	"./src/hooks/**/*.{js,ts,jsx,tsx,mdx}",
 	"./src/libs/**/*.{js,ts,jsx,tsx,mdx}",
 	"./src/config/**/*.{js,ts,jsx,tsx,mdx}",
-	"./src/app/admin/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
   	extend: {
