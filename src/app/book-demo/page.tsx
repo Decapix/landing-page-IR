@@ -382,8 +382,8 @@ export default function BookDemoPage() {
                     className="w-full px-4 py-3 border border-gray-300 rounded-[0.5rem] focus:outline-none focus:border-black transition-colors"
                     placeholder={
                       language === "fr"
-                        ? "Ex: Directeur artistique, Attaché de presse..."
-                        : "E.g., Art Director, Press Attaché..."
+                        ? "Ex: Stylist, Attaché de presse..."
+                        : "E.g., Stylist, Press officer..."
                     }
                     value={formData.role}
                     onChange={(e) =>
