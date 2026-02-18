@@ -14,6 +14,9 @@ export async function POST(request: Request) {
       socialMedia,
       role,
       language,
+      text,
+      entityName,
+      website,
     } = body
 
     // Validation
@@ -53,6 +56,9 @@ export async function POST(request: Request) {
       socialMedia: socialMedia || "",
       role,
       language: language || "en",
+      text: text || "",
+      entityName: entityName || "",
+      website: website || "",
     }
 
     const backendResponse = await fetch(`${backendUrl}api/landing-page/book-demo`, {

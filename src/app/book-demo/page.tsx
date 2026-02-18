@@ -27,7 +27,12 @@ export default function BookDemoPage() {
     country: "",
     socialMedia: "",
     role: "",
+    text: "",
+    entityName: "",
+    website: "",
   })
+
+  const showEntityFields = formData.userType === "brand" || formData.userType === "press_office"
 
   const userTypeOptions = [
     {
@@ -103,6 +108,26 @@ export default function BookDemoPage() {
         language === "fr"
           ? "Veuillez entrer votre fonction."
           : "Please enter your role."
+      )
+      return
+    }
+
+    if (showEntityFields && !formData.entityName) {
+      setIsError(true)
+      setErrorMessage(
+        language === "fr"
+          ? "Veuillez entrer le nom de votre organisation."
+          : "Please enter your organisation name."
+      )
+      return
+    }
+
+    if (showEntityFields && !formData.website) {
+      setIsError(true)
+      setErrorMessage(
+        language === "fr"
+          ? "Veuillez entrer votre site web."
+          : "Please enter your website."
       )
       return
     }
@@ -363,6 +388,63 @@ export default function BookDemoPage() {
                     value={formData.role}
                     onChange={(e) =>
                       setFormData({ ...formData, role: e.target.value })
+                    }
+                  />
+                </div>
+
+                {/* Entity fields - shown for Brand and Press Office */}
+                {showEntityFields && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: "auto" }}
+                    exit={{ opacity: 0, height: 0 }}
+                    className="space-y-6"
+                  >
+                    <div>
+                      <label className="block text-sm font-medium mb-2">
+                        {language === "fr" ? "Nom de l'organisation *" : "Organisation name *"}
+                      </label>
+                      <input
+                        type="text"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-[0.5rem] focus:outline-none focus:border-black transition-colors"
+                        value={formData.entityName}
+                        onChange={(e) =>
+                          setFormData({ ...formData, entityName: e.target.value })
+                        }
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium mb-2">
+                        {language === "fr" ? "Site web *" : "Website *"}
+                      </label>
+                      <input
+                        type="url"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-[0.5rem] focus:outline-none focus:border-black transition-colors"
+                        placeholder="https://"
+                        value={formData.website}
+                        onChange={(e) =>
+                          setFormData({ ...formData, website: e.target.value })
+                        }
+                      />
+                    </div>
+                  </motion.div>
+                )}
+
+                {/* Message / Text (optional) */}
+                <div>
+                  <label className="block text-sm font-medium mb-2">
+                    {language === "fr" ? "Message" : "Message"}
+                  </label>
+                  <textarea
+                    className="w-full px-4 py-3 border border-gray-300 rounded-[0.5rem] focus:outline-none focus:border-black transition-colors resize-vertical min-h-[100px]"
+                    placeholder={
+                      language === "fr"
+                        ? "Décrivez votre besoin (optionnel)"
+                        : "Describe your needs (optional)"
+                    }
+                    value={formData.text}
+                    onChange={(e) =>
+                      setFormData({ ...formData, text: e.target.value })
                     }
                   />
                 </div>
